@@ -1,10 +1,85 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>SOFT549 Web Exercises</title>
-</head>
-<body>
-    <h1>Welcome</h1>
-</body>
-</html>
+﻿<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+
+
+<div w3-include-html="header.html"></div>
+
+<div class="container-fluid bg-info">
+    <div class="row">
+        <div class="col">
+            <div class="card gray mt-mb-pt-pb-3">Some text</div>
+        </div>
+        <div class="col-9">
+            <div class="card gray mt-mb-pt-pb-3">
+                <h2>Created At the University of Plymouth</h2>
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+                      integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+                      crossorigin="" />
+                <!-- Make sure you put this AFTER Leaflet's CSS -->
+                <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+                        integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+                        crossorigin=""></script>
+                <style>
+                    #mapid {
+                        height: 180px;
+                    }
+                </style>
+                <div id="mapid" style="width: 600px; height: 400px;"></div>
+                <script>
+                    var mymap = L.map('mapid').setView([50.375406, -4.138342], 13);
+
+                    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2hpcmxleWF0a2luc29uIiwiYSI6ImNqbzFuczAxcjBjZmMzcm1vOGFvejUzMmcifQ.qleL10Dyow5CqrHUtr06tw', {
+                        maxZoom: 18,
+                        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                            'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                        id: 'mapbox.streets'
+                    }).addTo(mymap);
+
+                    var marker = L.marker([50.375406, -4.138342]).addTo(mymap).bindPopup("<b>Plymouth Uni!</b><br />Here it is.").openPopup();
+
+                </script>
+            </div>
+
+        </div>
+            
+        
+    </div>
+    </div>
+    
+    <div w3-include-html="footer.html"></div>
+
+
+
+
+
+    <script>
+        includeHTML();
+    </script>
